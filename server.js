@@ -39,7 +39,7 @@ app.get("/app/users", (req, res) => {
 
 // READ a single user (HTTP method GET) at endpoint /app/user/:id
 app.get("/app/user/:id", (req, res) => {
-	const stmt = db.prepare("SELECT * FROM userinfo WHERE id = 2").get();
+	const stmt = db.prepare("SELECT * FROM userinfo WHERE id = ?").get(req.params.id);
 	res.status(200).json(stmt);
 })
 // UPDATE a single user (HTTP method PATCH) at endpoint /app/update/user/:id
@@ -50,7 +50,7 @@ app.patch("/app/update/user/:id", (req, res) => {
 })
 // DELETE a single user (HTTP method DELETE) at endpoint /app/delete/user/:id
 app.delete("/app/delete/user/:id", (req, res) => {
-	const stmt = db.prepare("DELETE FROM userinfo WHEREW id = ?");
+	const stmt = db.prepare("DELETE FROM userinfo WHERE id = ?");
 	const info = stmt.run(req.params.id);
 	res.status(200).send({"message":info.changes + " record deleted: ID" + req.params.id + " (200)"});
 })
@@ -61,8 +61,10 @@ app.use(function(req, res){
 });
 
 // Tell STDOUT that the server is stopped
+/*
 process.on('SIGTERM', () => {
 	server.close( () => {
 		console.log('Server stopped.');
 	});
 });
+*/
